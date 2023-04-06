@@ -1,5 +1,5 @@
+import requests
 from django.shortcuts import render, HttpResponse
-from django.db import connection
 import pandas as pd
 
 from parser.apps.apartment.Analyze import Analyze
@@ -14,7 +14,7 @@ from parser.apps.apartment.OlxLinearRegression import OlxLinearRegression
 
 def apartment(request):
     if request.method == 'POST':
-        token = request.POST.get('token')
+        token = request.body.decode('utf-8')
         data = pd.DataFrame(OlxApartment().getData(),
                             columns=['id', 'rooms', 'floor', 'etajnost', 'price', 'date', 'location', 'area', 'metro',
                                      'repair',
@@ -33,10 +33,14 @@ def apartment(request):
         analitica.getImpotenAttribut()
         analitica.getMatrixAnalize()
         OlxApartment().setLocationIndex(analitica.getProfit())
-        return HttpResponse(request.POST.get('token'))
+        upload_file('http://192.168.0.106/api/getFiles', 'parser/apps/files/matrix.png', 'matrix', token)
+        upload_file('http://192.168.0.106/api/getFiles', 'parser/apps/files/importance.json', 'importance', token)
+        return HttpResponse({'status': 'ok'})
     else:
         return HttpResponse(status=405)
 
 
-
-
+def upload_file(url, loc, name, token):
+    file = open(loc, 'rb')
+    requests.post(url, data={'name': name}, files={'file': file}, headers={"Authorization": f"Bearer {token}"})
+    file.close()
