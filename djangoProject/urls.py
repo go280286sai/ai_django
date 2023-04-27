@@ -23,5 +23,7 @@ from parser import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('apartment', csrf_exempt(views.apartment))
+    path('apartment', csrf_exempt(views.apartment)),
+    path('predictApartment', csrf_exempt(views.predictApartment)),
+    path('getPredict', csrf_exempt(views.getPredict))
 ]

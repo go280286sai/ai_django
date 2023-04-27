@@ -10,10 +10,10 @@ class GradientBoosting(Olx):
     def getData(self):
         model = GradientBoostingClassifier(random_state=0)
         df_1 = self.data[self.data['favorites'] == 0][
-            ['rooms', 'floor', 'etajnost', 'area', 'metro', 'shops', 'repair', 'service', 'loc', 'price']]
+            ['rooms', 'floor', 'etajnost', 'area', 'loc', 'price']]
         x = df_1.iloc[:, :-1].values
-        y = df_1.iloc[:, 9].values
-        df = self.data[['rooms', 'floor', 'etajnost', 'area', 'metro', 'shops', 'repair', 'service', 'loc', 'price']]
+        y = df_1.iloc[:, 5].values
+        df = self.data[['rooms', 'floor', 'etajnost', 'area', 'loc', 'price']]
         x_2 = df.iloc[:, :-1].values
         model.fit(x, y)
         self.data['Predict'] = model.predict(x_2)
