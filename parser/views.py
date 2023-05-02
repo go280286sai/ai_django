@@ -7,12 +7,10 @@ import pandas as pd
 from parser.apps.apartment.Analyze import Analyze
 from parser.apps.apartment.PredictApartment import PredictApartment
 from parser.apps.apartment.PredictListApartment import PredictListApartment
-from parser.apps.apartment.RandomForestStart import RandomForestStart
 from parser.apps.db.OlxApartment import OlxApartment
 
 from parser.apps.apartment.RandomForest import RandomForest
 
-from parser.apps.apartment.GradientBoostingClassifier import GradientBoosting
 
 from parser.apps.apartment.OlxLinearRegression import OlxLinearRegression
 
@@ -24,12 +22,9 @@ def apartment(request):
         data = pd.DataFrame(OlxApartment().getData(),
                             columns=['id', 'rooms', 'floor', 'etajnost', 'price', 'date', 'location', 'area', 'favorites'])
         if (data['id'].count() * 0.3 <= data[data['favorites'] == 0]['id'].count()):
-            send_data = RandomForestStart(data).getData()
+            send_data = OlxLinearRegression(data).getData()
             OlxApartment().setNewPrice(send_data[1])
-            mae = {'MAE':int(send_data[0])}
-        # if (data['id'].count() * 0.3 <= data[data['favorites'] == 0]['id'].count()):
-        #     send_data = OlxLinearRegression(data)
-        #     OlxApartment().setNewPrice(send_data.getData())
+            mae = {'MAE': int(send_data[0])}
         else:
             send_data = RandomForest(data).getData()
             OlxApartment().setNewPrice(send_data[1])
@@ -57,7 +52,7 @@ def predictApartment(request):
         etajnost = get_body['etajnost']
         area = get_body['area']
         location = get_body['location']
-        result = obj.getData([[int(rooms), int(floor), int(etajnost), int(area), location]])
+        result = obj.getData([int(rooms), int(floor), int(etajnost), int(area), location])
         return HttpResponse(result)
     else:
         return HttpResponse(status=405)

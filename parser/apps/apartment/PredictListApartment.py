@@ -15,7 +15,7 @@ class PredictListApartment(Olx):
         a = df['etajnost'].quantile(0.25)
         b = df['etajnost'].quantile(0.75)
         df = df[(df['etajnost'] < b + 1.5 * (b - a)) & (df['etajnost'] > a - 1.5 * (b - a))]
-        model = AffinityPropagation(random_state=2)
+        model = AffinityPropagation(random_state=3)
         model.fit(df.iloc[:, 1:])
         df['label'] = model.labels_
         data_predict['label'] = model.predict(data_predict)

@@ -1,6 +1,4 @@
-import numpy as np
 import seaborn as sns
-from sklearn.cluster import KMeans
 from parser.apps.apartment.Olx import Olx
 import pandas as pd
 from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
